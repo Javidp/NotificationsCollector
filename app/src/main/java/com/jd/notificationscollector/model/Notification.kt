@@ -1,7 +1,11 @@
 package com.jd.notificationscollector.model
 
 data class Notification(
-    val title: String?,
-    val text: String?,
-    val bigText: String?
-)
+    var id: Int?,
+    var title: String?,
+    var text: String?,
+    var bigText: String?,
+    var timestamp: Long?
+) {
+    constructor(title: String?, text: String?, bigText: String?, timestamp: Long?) : this(null, title, text, bigText, timestamp)
+}

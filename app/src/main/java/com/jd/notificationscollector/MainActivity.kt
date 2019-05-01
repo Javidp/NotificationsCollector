@@ -1,60 +1,105 @@
 package com.jd.notificationscollector
 
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.widget.Button
-import android.widget.TextView
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import com.jd.notificationscollector.model.Notification
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val NUMBER_OF_NOTIFICATIONS_PER_PAGE = 10
+        private const val INITIAL_NUMBER_OF_NOTIFICATIONS = 10
+    }
+
+    private lateinit var swipeContainer: SwipeRefreshLayout
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
+
     private lateinit var db: NotificationsCollectorDatabase
-    private lateinit var contentTextView: TextView
+
+    private var dataset: MutableList<Notification> = mutableListOf()
+    private var notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
+
+    private val onLoadMoreClick = View.OnClickListener {
+        loadMoreNotifications()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.i("NLS", "main activity on create")
 
         db = NotificationsCollectorDatabase(applicationContext)
 
-        contentTextView = findViewById(R.id.content_text_view)
-        refresh()
-
-        findViewById<Button>(R.id.btn_clear).setOnClickListener {
-            clearNotifications()
+        swipeContainer = findViewById(R.id.notifications_swipe_container)
+        swipeContainer.setOnRefreshListener {
+            refresh()
+            swipeContainer.isRefreshing = false
         }
 
-        findViewById<Button>(R.id.btn_refresh).setOnClickListener {
-            refresh()
+        viewManager = LinearLayoutManager(this)
+        viewAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick)
+        recyclerView = findViewById<RecyclerView>(R.id.notifications_recycler).apply {
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            setHasFixedSize(true)
+
+            // use a linear layout manager
+            layoutManager = viewManager
+
+            // specify an viewAdapter (see also next example)
+            adapter = viewAdapter
+        }
+
+        refresh()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_bar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.btn_clear -> {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.clear_confirm_title)
+                .setMessage(R.string.clear_confirm_message)
+                .setPositiveButton(R.string.confirm_positive) { _, _ ->
+                    clearNotifications()
+                }
+                .setNegativeButton(R.string.confirm_negative, null)
+                .show()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
         }
     }
 
     private fun refresh() {
-        contentTextView.text = getContent()
-    }
-
-    private fun getContent(): String {
-        val notifications = db.getAllNotifications()
-        notifications.reverse()
-        Log.i("MA", "notifications count: ${notifications.size}")
-
-        var content = ""
-        notifications.forEach {
-            Log.i("MA", "notification: title=${it.title}, text=${it.text}, bt=${it.bigText}")
-            content += "${it.title}\n${it.text}\n${it.bigText}\n\n\n"
-        }
-
-        Log.i("MA", "content: $content")
-
-        return content
+        notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
+        dataset.clear()
+        dataset.addAll(db.getNotifications(notificationsCount))
+        viewAdapter.notifyDataSetChanged()
     }
 
     private fun clearNotifications() {
-        Log.i("MA", "clearing notifications")
         db.clearNotificationsTable()
         refresh()
+    }
 
+    private fun loadMoreNotifications() {
+        notificationsCount += NUMBER_OF_NOTIFICATIONS_PER_PAGE
+        dataset.clear()
+        dataset.addAll(db.getNotifications(notificationsCount))
+        viewAdapter.notifyDataSetChanged()
     }
 
 }

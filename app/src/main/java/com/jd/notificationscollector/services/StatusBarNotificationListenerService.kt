@@ -4,6 +4,7 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import com.jd.notificationscollector.NotificationsCollectorDatabase
+import com.jd.notificationscollector.model.Notification
 
 
 class StatusBarNotificationListenerService: NotificationListenerService() {
@@ -22,7 +23,7 @@ class StatusBarNotificationListenerService: NotificationListenerService() {
             Log.i("NLS", "notification title: $title, message: $text, big text: $bigText")
 
             val db = NotificationsCollectorDatabase(applicationContext)
-            db.saveNotification(title.toString(), text.toString(), bigText.toString())
+            db.saveNotification(Notification(title.toString(), text.toString(), bigText.toString(), System.currentTimeMillis()))
         } catch (e: Exception) {}
     }
 
