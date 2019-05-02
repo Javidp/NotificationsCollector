@@ -14,8 +14,8 @@ import com.jd.notificationscollector.model.Notification
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private const val NUMBER_OF_NOTIFICATIONS_PER_PAGE = 10
-        private const val INITIAL_NUMBER_OF_NOTIFICATIONS = 10
+        private const val NUMBER_OF_NOTIFICATIONS_PER_PAGE = 50
+        private const val INITIAL_NUMBER_OF_NOTIFICATIONS = 100
     }
 
     private lateinit var swipeContainer: SwipeRefreshLayout
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick)
+        viewAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick, this)
         recyclerView = findViewById<RecyclerView>(R.id.notifications_recycler).apply {
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView

@@ -1,15 +1,24 @@
 package com.jd.notificationscollector
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import com.jd.notificationscollector.model.AppInfo
 import com.jd.notificationscollector.model.Notification
+import java.text.SimpleDateFormat
+import java.util.*
 
-class NotificationsRecyclerAdapter(private val notifications: MutableList<Notification>, private val onLoadMoreClickListener: View.OnClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class NotificationsRecyclerAdapter(private val notifications: MutableList<Notification>,
+                                   private val onLoadMoreClickListener: View.OnClickListener,
+                                   private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val NOTIFICATION_VIEW_TYPE = 0
@@ -17,14 +26,20 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
     }
 
     class NotificationCardViewHolder(val notificationView: CardView) : RecyclerView.ViewHolder(notificationView)
-    class LoadMoreViewHolder(val loadMoreView: Button) : RecyclerView.ViewHolder(loadMoreView)
+    class LoadMoreViewHolder(val loadMoreView: CardView) : RecyclerView.ViewHolder(loadMoreView)
+
+    @SuppressLint("SimpleDateFormat")
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
+
+    private val db = NotificationsCollectorDatabase(context)
+    private val appsInfo: MutableMap<String, AppInfo> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == NOTIFICATION_VIEW_TYPE) {
             val notificationCard = LayoutInflater.from(parent.context).inflate(R.layout.notification_item, parent, false) as CardView
             return NotificationCardViewHolder(notificationCard)
         }
-        val loadMoreItem = LayoutInflater.from(parent.context).inflate(R.layout.notifications_load_more_item, parent, false) as Button
+        val loadMoreItem = LayoutInflater.from(parent.context).inflate(R.layout.notifications_load_more_item, parent, false) as CardView
         return LoadMoreViewHolder(loadMoreItem)
     }
 
@@ -36,6 +51,18 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
             holder.notificationView.findViewById<TextView>(R.id.notification_title).text = notifications[position].title
             holder.notificationView.findViewById<TextView>(R.id.notification_text).text = notifications[position].text
             holder.notificationView.findViewById<TextView>(R.id.notification_big_text).text = notifications[position].bigText
+            holder.notificationView.findViewById<TextView>(R.id.notification_timestamp).text = dateFormat.format(Date(notifications[position].timestamp ?: 0))
+
+            notifications[position].icon?.let {
+                DrawableCompat.setTint(it, ContextCompat.getColor(context, R.color.notificationIconTint))
+                holder.notificationView.findViewById<ImageView>(R.id.notification_icon).setImageDrawable(it)
+            }
+
+            notifications[position].packageName?.let {packageName ->
+                getAppInfo(packageName)?.let {appInfo ->
+                    holder.notificationView.findViewById<TextView>(R.id.app_name).text = appInfo.appName
+                }
+            }
         } else if (holder.itemViewType == LOAD_MORE_VIEW_TYPE) {
             holder as LoadMoreViewHolder
             holder.loadMoreView.setOnClickListener(onLoadMoreClickListener)
@@ -45,6 +72,16 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
     override fun getItemViewType(position: Int): Int {
         if (position == notifications.size) return LOAD_MORE_VIEW_TYPE
         return NOTIFICATION_VIEW_TYPE
+    }
+
+    private fun getAppInfo(packageName: String): AppInfo? {
+        if (!appsInfo.containsKey(packageName)) {
+            db.findAppInfo(packageName)?.let {
+                appsInfo.put(packageName, it)
+            }
+        }
+
+        return appsInfo[packageName]
     }
 
 }

@@ -6,4 +6,5 @@
     <string name="clear_confirm_message">Are you sure you want to delete all notifications? This can not be undone.</string>
     <string name="confirm_positive">Yes</string>
     <string name="confirm_negative">No</string>
+    <string name="notification_icon_content_description">icon</string>
 </resources>
