@@ -3,5 +3,6 @@
     <color name="colorPrimary">#474A56</color>
     <color name="colorPrimaryDark">#282A33</color>
     <color name="colorAccent">#1D72F9</color>
-    <color name="notificationIconTint">#1D72F9</color>
+    <color name="notificationTintColor">#1D72F9</color>
+    <color name="defaultNotificationTintColor">#8a000000</color>
 </resources>

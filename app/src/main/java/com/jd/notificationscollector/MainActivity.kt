@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     private fun refresh() {
         notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
         dataset.clear()
-        dataset.addAll(db.getNotifications(notificationsCount))
+        dataset.addAll(db.findNotifications(notificationsCount))
         viewAdapter.notifyDataSetChanged()
     }
 
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadMoreNotifications() {
         notificationsCount += NUMBER_OF_NOTIFICATIONS_PER_PAGE
         dataset.clear()
-        dataset.addAll(db.getNotifications(notificationsCount))
+        dataset.addAll(db.findNotifications(notificationsCount))
         viewAdapter.notifyDataSetChanged()
     }
 

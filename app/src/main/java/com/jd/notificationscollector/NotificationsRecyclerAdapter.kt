@@ -2,6 +2,7 @@ package com.jd.notificationscollector
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.CardView
@@ -53,15 +54,25 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
             holder.notificationView.findViewById<TextView>(R.id.notification_big_text).text = notifications[position].bigText
             holder.notificationView.findViewById<TextView>(R.id.notification_timestamp).text = dateFormat.format(Date(notifications[position].timestamp ?: 0))
 
-            notifications[position].icon?.let {
-                DrawableCompat.setTint(it, ContextCompat.getColor(context, R.color.notificationIconTint))
-                holder.notificationView.findViewById<ImageView>(R.id.notification_icon).setImageDrawable(it)
+            val tintColor = notifications[position].color?.let {if (it == 0) ContextCompat.getColor(context, R.color.defaultNotificationTintColor) else it}
+            notifications[position].icon?.let {icon ->
+                tintColor?.let { DrawableCompat.setTint(icon, it) }
+                holder.notificationView.findViewById<ImageView>(R.id.notification_icon).setImageDrawable(icon)
             }
 
             notifications[position].packageName?.let {packageName ->
                 getAppInfo(packageName)?.let {appInfo ->
-                    holder.notificationView.findViewById<TextView>(R.id.app_name).text = appInfo.appName
+                    val appNameTv = holder.notificationView.findViewById<TextView>(R.id.app_name)
+                    appNameTv.text = appInfo.appName
+                    tintColor?.let { appNameTv.setTextColor(it) }
                 }
+            }
+
+            holder.notificationView.setOnClickListener {
+                val notificationLogIntent = Intent(context, NotificationLogsActivity::class.java).apply {
+                    putExtra("notificationId", notifications[position].id)
+                }
+                context.startActivity(notificationLogIntent)
             }
         } else if (holder.itemViewType == LOAD_MORE_VIEW_TYPE) {
             holder as LoadMoreViewHolder
