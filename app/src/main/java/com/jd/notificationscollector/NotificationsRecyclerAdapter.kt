@@ -3,8 +3,8 @@ package com.jd.notificationscollector
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -56,7 +56,7 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
 
             val tintColor = notifications[position].color?.let {if (it == 0) ContextCompat.getColor(context, R.color.defaultNotificationTintColor) else it}
             notifications[position].icon?.let {icon ->
-                tintColor?.let { DrawableCompat.setTint(icon, it) }
+                tintColor?.let { icon.setColorFilter(it, PorterDuff.Mode.SRC_ATOP) }
                 holder.notificationView.findViewById<ImageView>(R.id.notification_icon).setImageDrawable(icon)
             }
 
