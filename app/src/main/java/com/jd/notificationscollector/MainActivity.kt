@@ -1,14 +1,15 @@
 package com.jd.notificationscollector
 
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.Notification
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private lateinit var db: NotificationsCollectorDatabase
+    private lateinit var db: NcDatabase
 
     private var dataset: MutableList<Notification> = mutableListOf()
     private var notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        db = NotificationsCollectorDatabase(applicationContext)
+        db = NcDatabase.create(this)
 
         swipeContainer = findViewById(R.id.notifications_swipe_container)
         swipeContainer.setOnRefreshListener {
@@ -86,19 +87,21 @@ class MainActivity : AppCompatActivity() {
     private fun refresh() {
         notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
         dataset.clear()
-        dataset.addAll(db.findNotifications(notificationsCount))
+        dataset.addAll(db.notificationsDao().findLast(notificationsCount))
         viewAdapter.notifyDataSetChanged()
     }
 
     private fun clearNotifications() {
-        db.clearNotificationsTable()
+        db.notificationsDao().clearAll()
+        db.notificationsLogsDao().clearAll()
+        db.appsInfoDao().clearAll()
         refresh()
     }
 
     private fun loadMoreNotifications() {
         notificationsCount += NUMBER_OF_NOTIFICATIONS_PER_PAGE
         dataset.clear()
-        dataset.addAll(db.findNotifications(notificationsCount))
+        dataset.addAll(db.notificationsDao().findLast(notificationsCount))
         viewAdapter.notifyDataSetChanged()
     }
 

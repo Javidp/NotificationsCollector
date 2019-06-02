@@ -4,10 +4,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.jd.notificationscollector.database.NcDatabase
 
 class NotificationLogsActivity : AppCompatActivity() {
 
@@ -24,8 +25,8 @@ class NotificationLogsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_notification_logs)
 
         val notificationId = intent.getLongExtra("notificationId", 0)
-        NotificationsCollectorDatabase(this)
-            .findNotificationLog(notificationId)?.let {log ->
+        val db = NcDatabase.create(this)
+        db.notificationsLogsDao().findByNotificationId(notificationId)?.let {log ->
             findViewById<TextView>(R.id.notification_log_tv).apply {
                 text = getString(R.string.notification_log_template, log.sbn, log.notification, log.extras)
                 setOnClickListener(onNotificationLogClick)

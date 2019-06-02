@@ -1,9 +1,14 @@
 package com.jd.notificationscollector.model
 
-import android.graphics.drawable.Drawable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "apps_info")
 data class AppInfo (
-    var packageName: String?,
+    @PrimaryKey
+    var packageName: String,
     var appName: String?,
-    var appIcon: Drawable?
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    var appIcon: ByteArray?
 )

@@ -4,14 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
+import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.AppInfo
 import com.jd.notificationscollector.model.Notification
 import java.text.SimpleDateFormat
@@ -32,8 +33,9 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
     @SuppressLint("SimpleDateFormat")
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
 
-    private val db = NotificationsCollectorDatabase(context)
+    private val db = NcDatabase.create(context)
     private val appsInfo: MutableMap<String, AppInfo> = mutableMapOf()
+    private val bitmapDrawableConverter = BitmapDrawableConverter(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == NOTIFICATION_VIEW_TYPE) {
@@ -55,7 +57,8 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
             holder.notificationView.findViewById<TextView>(R.id.notification_timestamp).text = dateFormat.format(Date(notifications[position].timestamp ?: 0))
 
             val tintColor = notifications[position].color?.let {if (it == 0) ContextCompat.getColor(context, R.color.defaultNotificationTintColor) else it}
-            notifications[position].icon?.let {icon ->
+            notifications[position].icon?.let {iconBlob ->
+                val icon = bitmapDrawableConverter.toDrawable(iconBlob)
                 tintColor?.let { icon.setColorFilter(it, PorterDuff.Mode.SRC_ATOP) }
                 holder.notificationView.findViewById<ImageView>(R.id.notification_icon).setImageDrawable(icon)
             }
@@ -87,7 +90,7 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
 
     private fun getAppInfo(packageName: String): AppInfo? {
         if (!appsInfo.containsKey(packageName)) {
-            db.findAppInfo(packageName)?.let {
+            db.appsInfoDao().findByPackageName(packageName)?.let {
                 appsInfo.put(packageName, it)
             }
         }

@@ -2,16 +2,18 @@ package com.jd.notificationscollector.services
 
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import com.jd.notificationscollector.NotificationsCollectorDatabase
+import com.jd.notificationscollector.BitmapDrawableConverter
+import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.AppInfo
 import com.jd.notificationscollector.model.Notification
 import com.jd.notificationscollector.model.NotificationLog
-
 
 class StatusBarNotificationListenerService: NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         try {
+            if (sbn?.packageName == "com.digibites.accubattery") return
+
             val extras = sbn?.notification?.extras
             val title = extras?.get("android.title")
             val text = extras?.get("android.text")
@@ -25,22 +27,29 @@ class StatusBarNotificationListenerService: NotificationListenerService() {
             val appName = applicationContext.packageManager.getApplicationLabel(appInfo).toString()
             val appIcon = applicationContext.packageManager.getApplicationIcon(sbn?.packageName)
 
-            val db = NotificationsCollectorDatabase(applicationContext)
-            db.saveAppInfoIfNotExists(AppInfo(sbn?.packageName, appName, appIcon))
-            val savedNotification = db.saveNotification(
+            val bitmapDrawableConverter = BitmapDrawableConverter(this)
+            val db = NcDatabase.create(applicationContext)
+            sbn?.packageName?.let {
+                db.appsInfoDao().insertIfNotExists(AppInfo(it, appName, bitmapDrawableConverter.toByteArray(appIcon)))
+            }
+            var notificationIconBlob: ByteArray? = null
+            notificationIcon?.let {
+                notificationIconBlob = bitmapDrawableConverter.toByteArray(notificationIcon)
+            }
+            val savedNotificationId = db.notificationsDao().insert(
                 Notification(
                     title.toString(),
                     text.toString(),
                     bigText.toString(),
                     sbn?.packageName,
                     sbn?.postTime,
-                    notificationIcon,
+                    notificationIconBlob,
                     color
                 )
             )
-            db.saveNotificationLog(
+            db.notificationsLogsDao().insert(
                 NotificationLog(
-                    savedNotification?.id,
+                    savedNotificationId,
                     sbn.toString(),
                     sbn?.notification.toString(),
                     sbn?.notification?.extras.toString()
