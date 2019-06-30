@@ -1,13 +1,28 @@
 <resources>
     <string name="app_name">Notifications Collector</string>
-    <string name="load_more_btn_text">Load more</string>
-    <string name="clear_btn_text">Clear</string>
-    <string name="clear_confirm_title">Delete notifications</string>
-    <string name="clear_confirm_message">Are you sure you want to delete all notifications? This can not be undone.</string>
+
+    <!-- Menu -->
+    <string name="menu_item_clear">Clear</string>
+    <string name="menu_item_apps_settings">Apps Settings</string>
+
+    <!-- General -->
+    <string name="load_more">Load more</string>
+    <string name="delete">Delete</string>
     <string name="confirm_positive">Yes</string>
     <string name="confirm_negative">No</string>
-    <string name="notification_icon_content_description">icon</string>
     <string name="no_data">No data</string>
-    <string name="notification_log_template">%1$s\n\n%2$s\n\n%3$s</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
+
+    <string name="clear_confirm_title">Delete notifications</string>
+    <string name="clear_confirm_message">Are you sure you want to delete all notifications? This can not be undone.</string>
+    <string name="notification_icon_content_description">icon</string>
+    <string name="app_icon_content_description">icon</string>
+    <string name="notification_log_template">%1$s\n\n%2$s\n\n%3$s</string>
+
+    <!-- Apps settings -->
+    <string name="title_activity_apps_settings">Apps Settings</string>
+    <string name="title_activity_app_settings">App Settings</string>
+    <string name="app_settings_enable_collecting_title">Enable collecting</string>
+    <string name="app_settings_enable_collecting_description">Enable if you want to collect notifications from this app</string>
+    <string name="app_settings_number_of_notifications_description">Number of collected notifications:</string>
 </resources>

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/btn_clear"
-          android:title="@string/clear_btn_text"
-          android:icon="@android:drawable/ic_menu_delete"
-          app:showAsAction="always"/>
+    <item
+        android:id="@+id/btn_clear"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/menu_item_clear"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_btn_apps_settings"
+        android:title="@string/menu_item_apps_settings" />
 </menu>

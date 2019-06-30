@@ -18,7 +18,7 @@
             android:layout_height="match_parent">
 
         <TextView
-                android:text="@string/load_more_btn_text"
+                android:text="@string/load_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/load_more_notifications_tv"
                 app:layout_constraintStart_toStartOf="parent"

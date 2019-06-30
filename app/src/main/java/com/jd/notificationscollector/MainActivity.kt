@@ -1,5 +1,6 @@
 package com.jd.notificationscollector
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.jd.notificationscollector.apps.AppsSettings
 import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.Notification
 
@@ -77,6 +79,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 .setNegativeButton(R.string.confirm_negative, null)
                 .show()
+            true
+        }
+        R.id.menu_btn_apps_settings -> {
+            val appsSettingsIntent = Intent(this, AppsSettings::class.java)
+            startActivity(appsSettingsIntent)
             true
         }
         else -> {
