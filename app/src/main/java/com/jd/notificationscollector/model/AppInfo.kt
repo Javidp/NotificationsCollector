@@ -10,5 +10,6 @@ data class AppInfo (
     var packageName: String,
     var appName: String?,
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    var appIcon: ByteArray?
+    var appIcon: ByteArray?,
+    var isNotificationsCollectingActive: Boolean
 )

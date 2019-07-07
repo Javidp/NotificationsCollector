@@ -18,6 +18,15 @@ object Migrations {
         }
     }
 
-    val all = arrayOf(MIGRATION_8_9, MIGRATION_9_10)
+    private val MIGRATION_10_11 = object: Migration(10, 11) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE apps_info_tmp (packageName TEXT NOT NULL PRIMARY KEY, appName TEXT, appIcon BLOB, isNotificationsCollectingActive INTEGER NOT NULL)")
+            database.execSQL("INSERT INTO apps_info_tmp (packageName, appName, appIcon, isNotificationsCollectingActive) SELECT packageName, appName, appIcon, 1 FROM apps_info")
+            database.execSQL("DROP TABLE apps_info")
+            database.execSQL("ALTER TABLE apps_info_tmp RENAME TO apps_info")
+        }
+    }
+
+    val all = arrayOf(MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
 
 }

@@ -10,7 +10,6 @@ import com.jd.notificationscollector.model.AppInfo
 import kotlinx.android.synthetic.main.activity_app_settings.*
 import kotlinx.android.synthetic.main.content_app_settings.*
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AppSettings : AppCompatActivity() {
@@ -29,6 +28,7 @@ class AppSettings : AppCompatActivity() {
 
         initDefaultValues()
         setupAppInfo()
+        setupEnableCollecting()
         setupCollectedNotificationsInfo()
     }
 
@@ -43,6 +43,17 @@ class AppSettings : AppCompatActivity() {
             it.appIcon?.let {iconBlob ->
                 val bitmapDrawableConverter = BitmapDrawableConverter(this)
                 app_settings_icon.setImageDrawable(bitmapDrawableConverter.toDrawable(iconBlob))
+            }
+        }
+    }
+
+    private fun setupEnableCollecting() {
+        app?.let {
+            app_settings_enable_collecting_switch.isChecked = it.isNotificationsCollectingActive
+
+            app_settings_enable_collecting_switch.setOnCheckedChangeListener { _, isChecked ->
+                it.isNotificationsCollectingActive = isChecked
+                db.appsInfoDao().updateIsNotificationsCollectingActiveByPackageName(it.packageName, isChecked)
             }
         }
     }

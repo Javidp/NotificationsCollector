@@ -12,25 +12,28 @@ class StatusBarNotificationListenerService: NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         try {
-            if (sbn?.packageName == "com.digibites.accubattery") return
+            val packageName = sbn?.packageName ?: return
 
-            val extras = sbn?.notification?.extras
+            val db = NcDatabase.create(applicationContext)
+            val isAppExcluded = !(db.appsInfoDao().findByPackageName(packageName)?.isNotificationsCollectingActive ?: true)
+            if (isAppExcluded) return
+
+            val extras = sbn.notification?.extras
             val title = extras?.get("android.title")
             val text = extras?.get("android.text")
             val bigText = extras?.get("android.bigText")
-            val color = sbn?.notification?.color
+            val color = sbn.notification?.color
             val notificationIcon = extras?.getInt("android.icon")?.let {
                 applicationContext.createPackageContext(sbn.packageName, 0).resources.getDrawable(it, applicationContext.theme)
             }
 
-            val appInfo = applicationContext.packageManager.getApplicationInfo(sbn?.packageName, 0)
+            val appInfo = applicationContext.packageManager.getApplicationInfo(sbn.packageName, 0)
             val appName = applicationContext.packageManager.getApplicationLabel(appInfo).toString()
-            val appIcon = applicationContext.packageManager.getApplicationIcon(sbn?.packageName)
+            val appIcon = applicationContext.packageManager.getApplicationIcon(sbn.packageName)
 
             val bitmapDrawableConverter = BitmapDrawableConverter(this)
-            val db = NcDatabase.create(applicationContext)
-            sbn?.packageName?.let {
-                db.appsInfoDao().insertIfNotExists(AppInfo(it, appName, bitmapDrawableConverter.toByteArray(appIcon)))
+            sbn.packageName?.let {
+                db.appsInfoDao().insertIfNotExists(AppInfo(it, appName, bitmapDrawableConverter.toByteArray(appIcon), true))
             }
             var notificationIconBlob: ByteArray? = null
             notificationIcon?.let {
@@ -41,8 +44,8 @@ class StatusBarNotificationListenerService: NotificationListenerService() {
                     title.toString(),
                     text.toString(),
                     bigText.toString(),
-                    sbn?.packageName,
-                    sbn?.postTime,
+                    sbn.packageName,
+                    sbn.postTime,
                     notificationIconBlob,
                     color
                 )
@@ -51,8 +54,8 @@ class StatusBarNotificationListenerService: NotificationListenerService() {
                 NotificationLog(
                     savedNotificationId,
                     sbn.toString(),
-                    sbn?.notification.toString(),
-                    sbn?.notification?.extras.toString()
+                    sbn.notification.toString(),
+                    sbn.notification?.extras.toString()
                 )
             )
         } catch (e: Exception) {

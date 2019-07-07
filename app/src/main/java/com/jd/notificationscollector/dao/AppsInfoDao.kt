@@ -12,6 +12,9 @@ interface AppsInfoDao: BaseDao<AppInfo> {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertIfNotExists(appInfo: AppInfo)
 
+    @Query("UPDATE apps_info SET isNotificationsCollectingActive = :isNotificationsCollectingActive WHERE packageName = :packageName")
+    fun updateIsNotificationsCollectingActiveByPackageName(packageName: String, isNotificationsCollectingActive: Boolean)
+
     @Query("SELECT * FROM apps_info")
     fun findAll(): List<AppInfo>
 

@@ -12,7 +12,7 @@ import com.jd.notificationscollector.model.AppInfo
 import com.jd.notificationscollector.model.Notification
 import com.jd.notificationscollector.model.NotificationLog
 
-@Database(entities = [Notification::class, AppInfo::class, NotificationLog::class], version = 10)
+@Database(entities = [Notification::class, AppInfo::class, NotificationLog::class], version = 11)
 abstract class NcDatabase: RoomDatabase() {
 
     abstract fun notificationsDao(): NotificationsDao
