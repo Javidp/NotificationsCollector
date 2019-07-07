@@ -152,17 +152,20 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/app_settings_collected_notifications_description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
                         android:text="@string/app_settings_number_of_notifications_description"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/textView5" />
 
                     <Button
-                        android:id="@+id/button"
+                        android:id="@+id/app_settings_btn_delete_notifications"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -173,7 +176,21 @@
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                        app:layout_constraintTop_toBottomOf="@+id/app_settings_collected_notifications_description" />
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Collected notifications"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/app_settings_collected_notifications_description"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>

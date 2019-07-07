@@ -13,6 +13,12 @@ interface NotificationsDao: BaseDao<Notification> {
     @Query("SELECT * FROM notifications ORDER BY timestamp DESC LIMIT :limit")
     fun findLast(limit: Int): List<Notification>
 
+    @Query("DELETE FROM notifications WHERE packageName = :packageName")
+    fun deleteByPackageName(packageName: String): Int
+
+    @Query("SELECT count(_id) FROM notifications WHERE packageName = :packageName")
+    fun countByPackageName(packageName: String): Int
+
     @Query("DELETE FROM notifications")
     fun clearAll()
 
