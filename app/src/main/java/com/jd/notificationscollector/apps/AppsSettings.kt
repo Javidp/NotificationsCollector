@@ -18,6 +18,7 @@ class AppsSettings : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_apps_settings)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val db = NcDatabase.create(this)
         val apps = db.appsInfoDao().findAll()
@@ -29,6 +30,11 @@ class AppsSettings : AppCompatActivity() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

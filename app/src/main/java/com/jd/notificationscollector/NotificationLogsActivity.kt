@@ -23,6 +23,7 @@ class NotificationLogsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification_logs)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val notificationId = intent.getLongExtra("notificationId", 0)
         val db = NcDatabase.create(this)
@@ -33,4 +34,10 @@ class NotificationLogsActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
 }

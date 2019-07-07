@@ -21,6 +21,7 @@ class AppSettings : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app_settings)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val appPackage = intent.getStringExtra("app_package_name")
         db = NcDatabase.create(this)
@@ -30,6 +31,11 @@ class AppSettings : AppCompatActivity() {
         setupAppInfo()
         setupEnableCollecting()
         setupCollectedNotificationsInfo()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun initDefaultValues() {
@@ -62,7 +68,9 @@ class AppSettings : AppCompatActivity() {
         app?.packageName?.let {
             GlobalScope.launch {
                 val notificationsCount = db.notificationsDao().countByPackageName(it)
-                app_settings_collected_notifications_description.text = getString(R.string.app_settings_number_of_notifications_description, notificationsCount)
+                runOnUiThread {
+                    app_settings_collected_notifications_description.text = getString(R.string.app_settings_number_of_notifications_description, notificationsCount)
+                }
             }
         }
 
