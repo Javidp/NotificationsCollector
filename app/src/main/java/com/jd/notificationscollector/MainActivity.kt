@@ -17,17 +17,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+private const val NUMBER_OF_NOTIFICATIONS_PER_PAGE = 50
+private const val INITIAL_NUMBER_OF_NOTIFICATIONS = 100
+
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        private const val NUMBER_OF_NOTIFICATIONS_PER_PAGE = 50
-        private const val INITIAL_NUMBER_OF_NOTIFICATIONS = 100
-    }
-
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
-
+    private lateinit var notificationsRecyclerAdapter: RecyclerView.Adapter<*>
     private lateinit var db: NcDatabase
 
     private var dataset: MutableList<Notification> = mutableListOf()
@@ -54,19 +49,10 @@ class MainActivity : AppCompatActivity() {
 
         notifications_swipe_container.setOnRefreshListener(onSwipeRefresh)
 
-        viewManager = LinearLayoutManager(this)
-        viewAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick, this)
-        recyclerView = findViewById<RecyclerView>(R.id.notifications_recycler).apply {
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            setHasFixedSize(true)
-
-            // use a linear layout manager
-            layoutManager = viewManager
-
-            // specify an viewAdapter (see also next example)
-            adapter = viewAdapter
-        }
+        notificationsRecyclerAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick, this)
+        notifications_recycler.setHasFixedSize(true)
+        notifications_recycler.layoutManager = LinearLayoutManager(this)
+        notifications_recycler.adapter = notificationsRecyclerAdapter
 
         refresh()
     }
@@ -103,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         dataset.clear()
         dataset.addAll(db.notificationsDao().findLast(notificationsCount))
         runOnUiThread {
-            viewAdapter.notifyDataSetChanged()
+            notificationsRecyclerAdapter.notifyDataSetChanged()
         }
     }
 
@@ -118,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         notificationsCount += NUMBER_OF_NOTIFICATIONS_PER_PAGE
         dataset.clear()
         dataset.addAll(db.notificationsDao().findLast(notificationsCount))
-        viewAdapter.notifyDataSetChanged()
+        notificationsRecyclerAdapter.notifyDataSetChanged()
     }
 
 }
