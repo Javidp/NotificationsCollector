@@ -13,6 +13,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jd.notificationscollector.apps.AppsSettings
 import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.Notification
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +24,6 @@ class MainActivity : AppCompatActivity() {
         private const val INITIAL_NUMBER_OF_NOTIFICATIONS = 100
     }
 
-    private lateinit var swipeContainer: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -35,17 +37,22 @@ class MainActivity : AppCompatActivity() {
         loadMoreNotifications()
     }
 
+    private val onSwipeRefresh = SwipeRefreshLayout.OnRefreshListener {
+        GlobalScope.launch {
+            refresh()
+            runOnUiThread {
+                notifications_swipe_container.isRefreshing = false
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         db = NcDatabase.create(this)
 
-        swipeContainer = findViewById(R.id.notifications_swipe_container)
-        swipeContainer.setOnRefreshListener {
-            refresh()
-            swipeContainer.isRefreshing = false
-        }
+        notifications_swipe_container.setOnRefreshListener(onSwipeRefresh)
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick, this)
@@ -95,7 +102,9 @@ class MainActivity : AppCompatActivity() {
         notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
         dataset.clear()
         dataset.addAll(db.notificationsDao().findLast(notificationsCount))
-        viewAdapter.notifyDataSetChanged()
+        runOnUiThread {
+            viewAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun clearNotifications() {
