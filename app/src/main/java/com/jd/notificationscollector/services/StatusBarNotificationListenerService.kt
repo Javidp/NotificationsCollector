@@ -12,6 +12,7 @@ class StatusBarNotificationListenerService: NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         try {
+            if ((sbn?.notification?.flags ?: 0x0) and android.app.Notification.FLAG_GROUP_SUMMARY != 0) return
             val packageName = sbn?.packageName ?: return
 
             val db = NcDatabase.create(applicationContext)
