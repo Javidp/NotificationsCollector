@@ -41,12 +41,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val onGoToTheTopClick = View.OnClickListener {
+        val recyclerLayoutManager = notifications_recycler.layoutManager as? LinearLayoutManager
+        recyclerLayoutManager?.smoothScrollToPosition(notifications_recycler, null, 0)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         db = NcDatabase.create(this)
 
+        go_top_fab.setOnClickListener(onGoToTheTopClick)
         notifications_swipe_container.setOnRefreshListener(onSwipeRefresh)
 
         notificationsRecyclerAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick, this)
