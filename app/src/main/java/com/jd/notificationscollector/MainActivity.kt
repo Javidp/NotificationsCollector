@@ -1,7 +1,11 @@
 package com.jd.notificationscollector
 
+import android.content.ComponentName
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jd.notificationscollector.apps.AppsSettings
 import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.Notification
+import com.jd.notificationscollector.services.StatusBarNotificationListenerService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -49,6 +54,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        checkNotificationAccessPermission()
 
         db = NcDatabase.create(this)
 
@@ -111,6 +118,25 @@ class MainActivity : AppCompatActivity() {
         dataset.clear()
         dataset.addAll(db.notificationsDao().findLast(notificationsCount))
         notificationsRecyclerAdapter.notifyDataSetChanged()
+    }
+
+    private fun checkNotificationAccessPermission() {
+        if (Build.VERSION.SDK_INT >= 22 && !isNotificationPermissionGranted()) {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.permission_request_title)
+                .setMessage(R.string.notification_listener_permission_request)
+                .setPositiveButton(R.string.permission_request_open_settings) { _, _ ->
+                    startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+    }
+
+    private fun isNotificationPermissionGranted(): Boolean {
+        val notificationListenerServiceComponentName = ComponentName(this, StatusBarNotificationListenerService::class.java)
+        val flat = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
+        return flat?.contains(notificationListenerServiceComponentName.flattenToString()) == true
     }
 
 }

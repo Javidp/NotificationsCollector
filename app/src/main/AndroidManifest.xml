@@ -10,7 +10,7 @@
             android:roundIcon="@mipmap/app_icon_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
-            tools:ignore="GoogleAppIndexingWarning">
+            tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
                 android:name=".apps.AppSettings"
                 android:label="@string/title_activity_app_settings"
@@ -32,7 +32,7 @@
 
         <service
                 android:name=".services.StatusBarNotificationListenerService"
-                android:label="MyNotificationListenerService"
+                android:label="Allow app to read notifications"
                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService"/>

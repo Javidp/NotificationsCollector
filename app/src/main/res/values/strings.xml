@@ -10,6 +10,7 @@
     <string name="delete">Delete</string>
     <string name="confirm_positive">Yes</string>
     <string name="confirm_negative">No</string>
+    <string name="cancel">Cancel</string>
     <string name="no_data">No data</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
 
@@ -25,4 +26,9 @@
     <string name="app_settings_enable_collecting_title">Enable collecting</string>
     <string name="app_settings_enable_collecting_description">Enable if you want to collect notifications from this app</string>
     <string name="app_settings_number_of_notifications_description">Collected %d notifications in total</string>
+
+    <!-- Permissions -->
+    <string name="permission_request_title">Permission required</string>
+    <string name="permission_request_open_settings">Open settings</string>
+    <string name="notification_listener_permission_request">To allow this app collecting notifications we need notification access permission. Without this the app will not be able fulfill its goal. Please enable this permission for this app in the settings.</string>
 </resources>
