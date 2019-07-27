@@ -33,6 +33,6 @@
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/go_top_icon" />
+        app:srcCompat="@drawable/icon_go_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

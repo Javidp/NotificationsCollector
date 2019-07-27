@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var notificationsRecyclerAdapter: RecyclerView.Adapter<*>
     private lateinit var db: NcDatabase
+    private lateinit var notificationsManager: NotificationsManager
 
     private var dataset: MutableList<Notification> = mutableListOf()
     private var notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
@@ -62,6 +63,8 @@ class MainActivity : AppCompatActivity() {
         go_top_fab.setOnClickListener(onGoToTheTopClick)
         notifications_swipe_container.setOnRefreshListener(onSwipeRefresh)
 
+        notificationsManager = NotificationsManager(this, db)
+
         notificationsRecyclerAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick, this)
         notifications_recycler.setHasFixedSize(true)
         notifications_recycler.layoutManager = LinearLayoutManager(this)
@@ -76,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.btn_clear -> {
+        R.id.menu_btn_clear -> {
             AlertDialog.Builder(this)
                 .setTitle(R.string.clear_confirm_title)
                 .setMessage(R.string.clear_confirm_message)
@@ -92,6 +95,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(appsSettingsIntent)
             true
         }
+        R.id.menu_btn_filter -> {
+            showFilterView()
+            true
+        }
         else -> {
             super.onOptionsItemSelected(item)
         }
@@ -100,7 +107,8 @@ class MainActivity : AppCompatActivity() {
     private fun refresh() {
         notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
         dataset.clear()
-        dataset.addAll(db.notificationsDao().findLast(notificationsCount))
+        dataset.addAll(notificationsManager.getNotifications(notificationsCount))
+
         runOnUiThread {
             notificationsRecyclerAdapter.notifyDataSetChanged()
         }
@@ -116,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadMoreNotifications() {
         notificationsCount += NUMBER_OF_NOTIFICATIONS_PER_PAGE
         dataset.clear()
-        dataset.addAll(db.notificationsDao().findLast(notificationsCount))
+        dataset.addAll(notificationsManager.getNotifications(notificationsCount))
         notificationsRecyclerAdapter.notifyDataSetChanged()
     }
 
@@ -137,6 +145,26 @@ class MainActivity : AppCompatActivity() {
         val notificationListenerServiceComponentName = ComponentName(this, StatusBarNotificationListenerService::class.java)
         val flat = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
         return flat?.contains(notificationListenerServiceComponentName.flattenToString()) == true
+    }
+
+    private fun showFilterView() {
+        val filterItems = notificationsManager.getFilterItems()
+        val checkedItems = filterItems.map { it.checked }.toTypedArray().toBooleanArray()
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.filter_view_title)
+            .setPositiveButton(R.string.filter) { _, _ ->
+                refresh()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .setNeutralButton(R.string.filter_show_all) {_, _ ->
+                notificationsManager.resetFilters()
+                refresh()
+            }
+            .setMultiChoiceItems(filterItems.map { it.appName }.toTypedArray(), checkedItems) { _, which, isChecked ->
+                notificationsManager.setFilterItemChecked(which, isChecked)
+            }
+            .show()
     }
 
 }

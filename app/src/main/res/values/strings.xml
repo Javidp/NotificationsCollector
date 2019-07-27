@@ -2,6 +2,7 @@
     <string name="app_name">Notifications Collector</string>
 
     <!-- Menu -->
+    <string name="menu_item_filter">Filter</string>
     <string name="menu_item_clear">Clear</string>
     <string name="menu_item_apps_settings">Apps Settings</string>
 
@@ -13,6 +14,7 @@
     <string name="cancel">Cancel</string>
     <string name="no_data">No data</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="filter">Filter</string>
 
     <string name="clear_confirm_title">Delete notifications</string>
     <string name="clear_confirm_message">Are you sure you want to delete all notifications? This can not be undone.</string>
@@ -31,4 +33,8 @@
     <string name="permission_request_title">Permission required</string>
     <string name="permission_request_open_settings">Open settings</string>
     <string name="notification_listener_permission_request">To allow this app collecting notifications we need notification access permission. Without this the app will not be able fulfill its goal. Please enable this permission for this app in the settings.</string>
+
+    <!-- Filter -->
+    <string name="filter_view_title">Select apps</string>
+    <string name="filter_show_all">Show all</string>
 </resources>
