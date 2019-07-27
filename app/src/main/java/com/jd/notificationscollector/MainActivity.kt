@@ -39,12 +39,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val onSwipeRefresh = SwipeRefreshLayout.OnRefreshListener {
-        GlobalScope.launch {
-            refresh()
-            runOnUiThread {
-                notifications_swipe_container.isRefreshing = false
-            }
-        }
+        refresh()
     }
 
     private val onGoToTheTopClick = View.OnClickListener {
@@ -105,12 +100,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refresh() {
-        notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
-        dataset.clear()
-        dataset.addAll(notificationsManager.getNotifications(notificationsCount))
+        loadNotifications(INITIAL_NUMBER_OF_NOTIFICATIONS)
+    }
 
-        runOnUiThread {
-            notificationsRecyclerAdapter.notifyDataSetChanged()
+    private fun loadMoreNotifications() {
+        loadNotifications(notificationsCount + NUMBER_OF_NOTIFICATIONS_PER_PAGE)
+    }
+
+    private fun loadNotifications(count: Int) {
+        notifications_swipe_container.isRefreshing = true
+        GlobalScope.launch {
+            notificationsCount = count
+            dataset.clear()
+            dataset.addAll(notificationsManager.getNotifications(notificationsCount))
+
+            runOnUiThread {
+                notificationsRecyclerAdapter.notifyDataSetChanged()
+                notifications_swipe_container.isRefreshing = false
+            }
         }
     }
 
@@ -119,13 +126,6 @@ class MainActivity : AppCompatActivity() {
         db.notificationsLogsDao().clearAll()
         db.appsInfoDao().clearAll()
         refresh()
-    }
-
-    private fun loadMoreNotifications() {
-        notificationsCount += NUMBER_OF_NOTIFICATIONS_PER_PAGE
-        dataset.clear()
-        dataset.addAll(notificationsManager.getNotifications(notificationsCount))
-        notificationsRecyclerAdapter.notifyDataSetChanged()
     }
 
     private fun checkNotificationAccessPermission() {
