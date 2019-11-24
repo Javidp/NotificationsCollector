@@ -111,8 +111,10 @@ class MainActivity : AppCompatActivity() {
         notifications_swipe_container.isRefreshing = true
         GlobalScope.launch {
             notificationsCount = count
+
+            val notifications = notificationsManager.getNotifications(notificationsCount)
             dataset.clear()
-            dataset.addAll(notificationsManager.getNotifications(notificationsCount))
+            dataset.addAll(notifications)
 
             runOnUiThread {
                 notificationsRecyclerAdapter.notifyDataSetChanged()
