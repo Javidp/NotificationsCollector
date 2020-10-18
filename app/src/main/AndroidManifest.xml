@@ -25,13 +25,7 @@
             android:name=".apps.AppSettings"
             android:label="@string/title_activity_app_settings"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".apps.AppsSettings"
-            android:label="@string/title_activity_apps_settings"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".NotificationLogsActivity"></activity>
-        <activity android:name=".MainNotificationsActivity">
-        </activity>
+        <activity android:name=".notifications.NotificationLogsActivity"></activity>
 
         <service
             android:name=".services.StatusBarNotificationListenerService"

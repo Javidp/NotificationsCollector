@@ -1,4 +1,4 @@
-package com.jd.notificationscollector
+package com.jd.notificationscollector.notifications
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,6 +12,8 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.jd.notificationscollector.BitmapDrawableConverter
+import com.jd.notificationscollector.R
 import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.AppInfo
 import com.jd.notificationscollector.model.Notification
@@ -35,15 +37,20 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
 
     private val db = NcDatabase.create(context)
     private val appsInfo: MutableMap<String, AppInfo> = mutableMapOf()
-    private val bitmapDrawableConverter = BitmapDrawableConverter(context)
+    private val bitmapDrawableConverter =
+        BitmapDrawableConverter(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == NOTIFICATION_VIEW_TYPE) {
             val notificationCard = LayoutInflater.from(parent.context).inflate(R.layout.notification_item, parent, false) as CardView
-            return NotificationCardViewHolder(notificationCard)
+            return NotificationCardViewHolder(
+                notificationCard
+            )
         }
         val loadMoreItem = LayoutInflater.from(parent.context).inflate(R.layout.notifications_load_more_item, parent, false) as CardView
-        return LoadMoreViewHolder(loadMoreItem)
+        return LoadMoreViewHolder(
+            loadMoreItem
+        )
     }
 
     override fun getItemCount(): Int = notifications.size + 1
@@ -56,7 +63,9 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
             holder.notificationView.findViewById<TextView>(R.id.notification_big_text).text = notifications[position].bigText
             holder.notificationView.findViewById<TextView>(R.id.notification_timestamp).text = dateFormat.format(Date(notifications[position].timestamp ?: 0))
 
-            val tintColor = notifications[position].color?.let {if (it == 0) ContextCompat.getColor(context, R.color.defaultNotificationTintColor) else it}
+            val tintColor = notifications[position].color?.let {if (it == 0) ContextCompat.getColor(context,
+                R.color.defaultNotificationTintColor
+            ) else it}
             notifications[position].icon?.let {iconBlob ->
                 val icon = bitmapDrawableConverter.toDrawable(iconBlob)
                 tintColor?.let { icon.setColorFilter(it, PorterDuff.Mode.SRC_ATOP) }
@@ -65,7 +74,9 @@ class NotificationsRecyclerAdapter(private val notifications: MutableList<Notifi
 
             notifications[position].packageName?.let {packageName ->
                 getAppInfo(packageName)?.let {appInfo ->
-                    val appNameTv = holder.notificationView.findViewById<TextView>(R.id.app_name)
+                    val appNameTv = holder.notificationView.findViewById<TextView>(
+                        R.id.app_name
+                    )
                     appNameTv.text = appInfo.appName
                     tintColor?.let { appNameTv.setTextColor(it) }
                 }

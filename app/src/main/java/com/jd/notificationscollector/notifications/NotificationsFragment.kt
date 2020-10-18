@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.jd.notificationscollector.*
-import com.jd.notificationscollector.apps.AppsSettings
 import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.Notification
 import com.jd.notificationscollector.services.StatusBarNotificationListenerService
@@ -63,9 +62,18 @@ class NotificationsFragment: Fragment() {
         root.go_top_fab.setOnClickListener(onGoToTheTopClick)
         root.notifications_swipe_container.setOnRefreshListener(onSwipeRefresh)
 
-        notificationsManager = NotificationsManager(this.requireContext(), db)
+        notificationsManager =
+            NotificationsManager(
+                this.requireContext(),
+                db
+            )
 
-        notificationsRecyclerAdapter = NotificationsRecyclerAdapter(dataset, onLoadMoreClick, this.requireContext())
+        notificationsRecyclerAdapter =
+            NotificationsRecyclerAdapter(
+                dataset,
+                onLoadMoreClick,
+                this.requireContext()
+            )
         root.notifications_recycler.setHasFixedSize(true)
         root.notifications_recycler.layoutManager = LinearLayoutManager(this.requireContext())
         root.notifications_recycler.adapter = notificationsRecyclerAdapter
@@ -95,11 +103,6 @@ class NotificationsFragment: Fragment() {
                 }
                 .setNegativeButton(R.string.confirm_negative, null)
                 .show()
-            true
-        }
-        R.id.menu_btn_apps_settings -> {
-            val appsSettingsIntent = Intent(this.context, AppsSettings::class.java)
-            startActivity(appsSettingsIntent)
             true
         }
         R.id.menu_btn_filter -> {

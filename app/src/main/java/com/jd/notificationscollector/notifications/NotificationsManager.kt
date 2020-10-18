@@ -1,4 +1,4 @@
-package com.jd.notificationscollector
+package com.jd.notificationscollector.notifications
 
 import android.content.Context
 import androidx.core.os.ConfigurationCompat
@@ -39,8 +39,10 @@ class NotificationsManager(private val context: Context, private val db: NcDatab
 
     private fun reloadFilterItems() {
         filterItems = sortApps(db.appsInfoDao().findAll()).map {
-            FilterItem(it.packageName, it.appName ?: "", filterItems.find { filterItem ->
-                filterItem.packageName == it.packageName }?.checked ?: false
+            FilterItem(
+                it.packageName, it.appName ?: "", filterItems.find { filterItem ->
+                    filterItem.packageName == it.packageName
+                }?.checked ?: false
             )
         }
     }

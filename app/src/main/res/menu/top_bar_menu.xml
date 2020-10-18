@@ -13,9 +13,4 @@
         android:title="@string/menu_item_filter"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/menu_btn_apps_settings"
-        android:title="@string/menu_item_apps_settings"
-        android:icon="@drawable/icon_settings"
-        app:showAsAction="ifRoom"/>
 </menu>
