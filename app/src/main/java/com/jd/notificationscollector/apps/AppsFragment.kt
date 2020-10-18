@@ -1,43 +1,40 @@
 package com.jd.notificationscollector.apps
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.ConfigurationCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jd.notificationscollector.R
 import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.AppInfo
-import kotlinx.android.synthetic.main.activity_apps_settings.*
 import java.text.Collator
 
-class AppsSettings : AppCompatActivity() {
+class AppsFragment: Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_apps_settings)
-//        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root = inflater.inflate(R.layout.activity_apps_settings, container, false)
 
-        val db = NcDatabase.create(this)
+        val db = NcDatabase.create(this.requireContext())
         val apps = sortApps(db.appsInfoDao().findAll())
 
-        viewManager = LinearLayoutManager(this)
-        viewAdapter = AppsSettingsRecyclerAdapter(apps, this)
-        recyclerView = findViewById<RecyclerView>(R.id.apps_recycler).apply {
-            setHasFixedSize(true)
+        viewManager = LinearLayoutManager(this.requireContext())
+        viewAdapter = AppsSettingsRecyclerAdapter(apps, this.requireContext())
+
+        recyclerView = root.findViewById<RecyclerView>(R.id.apps_recycler).apply {
+            this.setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
-    }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
+        return root
     }
 
     private fun sortApps(apps: List<AppInfo>): List<AppInfo> {
