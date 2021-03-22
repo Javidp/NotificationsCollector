@@ -17,4 +17,10 @@
         android:label="@string/menu_apps"
         tools:layout="@layout/activity_apps_settings" />
 
+    <fragment
+        android:id="@+id/nav_delete_notifications"
+        android:name="com.jd.notificationscollector.delete.DeleteNotificationsFragment"
+        android:label="@string/menu_delete_notifications"
+        tools:layout="@layout/activity_delete_notifications" />
+
 </navigation>

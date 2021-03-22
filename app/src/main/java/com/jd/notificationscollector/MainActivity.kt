@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_notifications, R.id.nav_apps
+                R.id.nav_notifications, R.id.nav_apps, R.id.nav_delete_notifications
             ), drawerLayout
         )
 

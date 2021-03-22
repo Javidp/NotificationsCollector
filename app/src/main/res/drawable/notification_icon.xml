@@ -1,0 +1,25 @@
+<!-- The icon is 100x100, but there is padding 12, hence the 124x124. -->
+<!-- In paths think of icon size as 100x100 with start point at (0, 0) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="124dp"
+    android:height="124dp"
+    android:viewportWidth="124"
+    android:viewportHeight="124">
+  <group
+      android:translateX="12"
+      android:translateY="12" >
+
+    <path
+        android:pathData="M0,15 C0,5 5,0 15,0 H85 C95,0 100,5 100,15 V40 C100,50 95,55 85,55 H65 V40 H35 V 55 H15 C5,55 0,50 0,40Z   M 10,8 V15 H50 V8 Z   M10,23 V26 H90 V23Z   M10,32 V35 H90 V32Z"
+        android:fillColor="#ffffff" />
+    <path
+        android:pathData="M50,100 L25,72 H40 V45 H60 V72 H75 Z"
+        android:strokeAlpha="1"
+        android:strokeLineJoin="round"
+        android:strokeWidth="0"
+        android:fillColor="#ffffff"
+        android:strokeColor="#fbfbfb"
+        android:fillAlpha="1"
+        android:strokeLineCap="round" />
+  </group>
+</vector>

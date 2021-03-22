@@ -25,4 +25,10 @@ interface NotificationsDao: BaseDao<Notification> {
     @Query("DELETE FROM notifications")
     fun clearAll()
 
+    @Query("DELETE FROM notifications WHERE timestamp < :timestamp")
+    fun deleteByTimestampBefore(timestamp: Long): Int
+
+    @Query("SELECT count(_id) FROM notifications WHERE timestamp < :timestamp")
+    fun countByTimestampBefore(timestamp: Long): Int
+
 }

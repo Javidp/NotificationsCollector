@@ -12,5 +12,9 @@
             android:id="@+id/nav_apps"
             android:icon="@drawable/ic_menu_apps"
             android:title="@string/menu_apps" />
+        <item
+            android:id="@+id/nav_delete_notifications"
+            android:icon="@drawable/icon_menu_delete"
+            android:title="@string/menu_delete_notifications" />
     </group>
 </menu>

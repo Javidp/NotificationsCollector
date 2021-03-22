@@ -2,6 +2,7 @@ package com.jd.notificationscollector.services
 
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import android.util.Log
 import com.jd.notificationscollector.BitmapDrawableConverter
 import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.AppInfo
@@ -60,7 +61,7 @@ class StatusBarNotificationListenerService: NotificationListenerService() {
                 )
             )
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(javaClass.simpleName, "Exception during saving notification", e)
         }
     }
 
