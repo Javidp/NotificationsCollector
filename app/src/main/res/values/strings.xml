@@ -12,6 +12,7 @@
     <string name="confirm_positive">Yes</string>
     <string name="confirm_negative">No</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
     <string name="no_data">No data</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="filter">Filter</string>
@@ -38,6 +39,8 @@
 
     <string name="delete_notifications_counting_title">Preparing data</string>
     <string name="delete_notifications_counting_description">The app is preparing and counting data. Please wait a moment.\n\nDepending on number of notifications it may take a few seconds or a few minutes.</string>
+    <string name="delete_notifications_nothing_to_delete_title">Nothing to delete</string>
+    <string name="delete_notifications_nothing_to_delete_description">There are no notifications matching selected criteria</string>
     <string name="delete_old_notifications_alert_title">Delete selected notifications</string>
     <string name="delete_old_notifications_alert_message">This action will delete %1$d notifications. Are you sure you want to continue? This action can not be undone.</string>
     <string name="delete_old_notifications_btn">Delete selected</string>

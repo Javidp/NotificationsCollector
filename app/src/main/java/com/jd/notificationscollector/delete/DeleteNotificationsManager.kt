@@ -22,13 +22,22 @@ class DeleteNotificationsManager {
             preparingDataDialog.cancel()
 
             context.runOnUiThread {
-                AlertDialog.Builder(context)
-                    .setTitle(R.string.delete_old_notifications_alert_title)
-                    .setMessage(context.getString(R.string.delete_old_notifications_alert_message, count))
-                    .setPositiveButton(R.string.confirm_positive) { _, _ -> onConfirmFunction() }
-                    .setNegativeButton(R.string.confirm_negative) { _, _ -> onCancelFunction() }
-                    .create()
-                    .show()
+                if (count > 0) {
+                    AlertDialog.Builder(context)
+                        .setTitle(R.string.delete_old_notifications_alert_title)
+                        .setMessage(context.getString(R.string.delete_old_notifications_alert_message, count))
+                        .setPositiveButton(R.string.confirm_positive) { _, _ -> onConfirmFunction() }
+                        .setNegativeButton(R.string.confirm_negative) { _, _ -> onCancelFunction() }
+                        .create()
+                        .show()
+                } else {
+                    AlertDialog.Builder(context)
+                        .setTitle(R.string.delete_notifications_nothing_to_delete_title)
+                        .setMessage(R.string.delete_notifications_nothing_to_delete_description)
+                        .setPositiveButton(R.string.ok, null)
+                        .create()
+                        .show()
+                }
             }
         }
     }
