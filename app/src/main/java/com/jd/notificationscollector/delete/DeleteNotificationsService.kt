@@ -78,7 +78,11 @@ class DeleteNotificationsService : IntentService("DeleteNotificationsService") {
     }
 
     private fun deleteAppNotifications(appPackage: String): Int {
-        return 0
+        val db = NcDatabase.create(applicationContext)
+        val numberOfDeletedNotifications = db.notificationsDao().deleteByPackageName(appPackage)
+        db.close()
+
+        return numberOfDeletedNotifications
     }
 
     private fun deleteNotificationsBefore(timestamp: Long): Int {
