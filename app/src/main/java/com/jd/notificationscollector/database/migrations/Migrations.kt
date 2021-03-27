@@ -27,6 +27,15 @@ object Migrations {
         }
     }
 
-    val all = arrayOf(MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+    private val MIGRATION_11_12 = object: Migration(11, 12) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE INDEX index_notification_timestamp ON  notifications(timestamp)")
+            database.execSQL("CREATE INDEX index_notification_packageName_timestamp ON  notifications(packageName, timestamp)")
+            database.execSQL("CREATE INDEX index_notifications_logs_notification_id ON  notifications_logs(notification_id)")
+            database.execSQL("CREATE INDEX index_apps_info_packageName ON  apps_info(packageName)")
+        }
+    }
+
+    val all = arrayOf(MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
 
 }
