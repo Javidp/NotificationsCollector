@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.jd.notificationscollector.*
+import com.jd.notificationscollector.R
 import com.jd.notificationscollector.database.NcDatabase
 import com.jd.notificationscollector.model.Notification
 import com.jd.notificationscollector.services.StatusBarNotificationListenerService
@@ -42,17 +42,13 @@ class NotificationsFragment: Fragment() {
     }
 
     private val onGoToTheTopClick = View.OnClickListener {
-
-//        val aaa = Intent(this.context, TestSideMenuActivity::class.java)
-//        startActivity(aaa)
-
         val recyclerLayoutManager = notifications_recycler.layoutManager as? LinearLayoutManager
         recyclerLayoutManager?.smoothScrollToPosition(notifications_recycler, null, 0)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_notifications)
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         val root = inflater.inflate(R.layout.activity_notifications, container, false)
 
         checkNotificationAccessPermission()
@@ -78,8 +74,6 @@ class NotificationsFragment: Fragment() {
         root.notifications_recycler.layoutManager = LinearLayoutManager(this.requireContext())
         root.notifications_recycler.adapter = notificationsRecyclerAdapter
 
-//        refresh()
-
         return root
     }
 
@@ -88,23 +82,11 @@ class NotificationsFragment: Fragment() {
         refresh()
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.top_bar_menu, menu)
-//        return super.onCreateOptionsMenu(menu)
-//    }
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.top_bar_menu_notifications, menu)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.menu_btn_clear -> {
-            AlertDialog.Builder(this.requireContext())
-                .setTitle(R.string.clear_confirm_title)
-                .setMessage(R.string.clear_confirm_message)
-                .setPositiveButton(R.string.confirm_positive) { _, _ ->
-                    clearNotifications()
-                }
-                .setNegativeButton(R.string.confirm_negative, null)
-                .show()
-            true
-        }
         R.id.menu_btn_filter -> {
             showFilterView()
             true
@@ -138,13 +120,6 @@ class NotificationsFragment: Fragment() {
                 view.notifications_swipe_container.isRefreshing = false
             }
         }
-    }
-
-    private fun clearNotifications() {
-        db.notificationsDao().clearAll()
-        db.notificationsLogsDao().clearAll()
-        db.appsInfoDao().clearAll()
-        refresh()
     }
 
     private fun checkNotificationAccessPermission() {

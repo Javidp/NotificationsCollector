@@ -27,6 +27,7 @@ class AppsFragment: Fragment() {
     private var dataset: MutableList<AppInfo> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreate(savedInstanceState)
         val root = inflater.inflate(R.layout.activity_apps_settings, container, false)
 
         db = NcDatabase.create(requireContext())

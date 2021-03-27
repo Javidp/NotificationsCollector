@@ -15,18 +15,13 @@ private const val DAY = 1000 * 60 * 60 * 24
 
 class DeleteNotificationsFragment: Fragment() {
 
-    private lateinit var rootView: View
     private lateinit var db: NcDatabase
 
     private val deleteNotificationsManager = DeleteNotificationsManager()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreate(savedInstanceState)
         val root = inflater.inflate(R.layout.activity_delete_notifications, container, false)
-        rootView = root
 
         db = NcDatabase.create(this.requireContext())
 
@@ -47,7 +42,7 @@ class DeleteNotificationsFragment: Fragment() {
     }
 
     private fun onDeleteOldNotifications(view: View) {
-        val numberOfDays = rootView.delete_old_notifications_number_of_days_input.text.toString()
+        val numberOfDays = requireView().delete_old_notifications_number_of_days_input.text.toString()
         val timestamp = System.currentTimeMillis() - (numberOfDays.toLongOrNull() ?: 0) * DAY
 
         deleteNotificationsManager.showDeleteNotificationsPopups(
