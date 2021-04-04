@@ -5,7 +5,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,15 +26,15 @@ import kotlinx.coroutines.launch
 private const val NUMBER_OF_NOTIFICATIONS_PER_PAGE = 50
 private const val INITIAL_NUMBER_OF_NOTIFICATIONS = 100
 
-class NotificationsFragment: Fragment() {
+class NotificationsFragment: Fragment(R.layout.activity_notifications) {
 
     private lateinit var notificationsRecyclerAdapter: RecyclerView.Adapter<*>
+
     private lateinit var db: NcDatabase
     private lateinit var notificationsManager: NotificationsManager
 
     private var dataset: MutableList<Notification> = mutableListOf()
-    private var notificationsCount =
-        INITIAL_NUMBER_OF_NOTIFICATIONS
+    private var notificationsCount = INITIAL_NUMBER_OF_NOTIFICATIONS
 
     private val onLoadMoreClick = View.OnClickListener {
         loadMoreNotifications()
@@ -46,17 +49,20 @@ class NotificationsFragment: Fragment() {
         recyclerLayoutManager?.smoothScrollToPosition(notifications_recycler, null, 0)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        val root = inflater.inflate(R.layout.activity_notifications, container, false)
 
         checkNotificationAccessPermission()
 
         db = NcDatabase.create(this.requireContext())
+    }
 
-        root.go_top_fab.setOnClickListener(onGoToTheTopClick)
-        root.notifications_swipe_container.setOnRefreshListener(onSwipeRefresh)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view.go_top_fab.setOnClickListener(onGoToTheTopClick)
+        view.notifications_swipe_container.setOnRefreshListener(onSwipeRefresh)
 
         notificationsManager =
             NotificationsManager(
@@ -70,19 +76,15 @@ class NotificationsFragment: Fragment() {
                 onLoadMoreClick,
                 this.requireContext()
             )
-        root.notifications_recycler.setHasFixedSize(true)
-        root.notifications_recycler.layoutManager = LinearLayoutManager(this.requireContext())
-        root.notifications_recycler.adapter = notificationsRecyclerAdapter
+        view.notifications_recycler.setHasFixedSize(true)
+        view.notifications_recycler.layoutManager = LinearLayoutManager(this.requireContext())
+        view.notifications_recycler.adapter = notificationsRecyclerAdapter
 
-        return root
-    }
-
-    override fun onStart() {
-        super.onStart()
         refresh()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        menu.clear()
         menuInflater.inflate(R.menu.top_bar_menu_notifications, menu)
     }
 
@@ -105,9 +107,7 @@ class NotificationsFragment: Fragment() {
     }
 
     private fun loadNotifications(count: Int) {
-        val view = requireView()
-
-        view.notifications_swipe_container.isRefreshing = true
+        view?.notifications_swipe_container?.isRefreshing = true
         GlobalScope.launch {
             notificationsCount = count
 
@@ -117,7 +117,7 @@ class NotificationsFragment: Fragment() {
 
             requireActivity().runOnUiThread {
                 notificationsRecyclerAdapter.notifyDataSetChanged()
-                view.notifications_swipe_container.isRefreshing = false
+                view?.notifications_swipe_container?.isRefreshing = false
             }
         }
     }

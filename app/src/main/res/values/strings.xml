@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Notifications Collector</string>
 
+    <!-- Side menu -->
+    <string name="open_drawer_content_desc">open</string>
+    <string name="close_drawer_content_desc">close</string>
+
     <!-- Menu -->
     <string name="menu_item_filter">Filter</string>
     <string name="menu_item_clear">Clear</string>

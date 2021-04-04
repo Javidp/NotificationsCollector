@@ -2,9 +2,7 @@ package com.jd.notificationscollector.delete
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jd.notificationscollector.R
 import com.jd.notificationscollector.database.NcDatabase
@@ -13,22 +11,19 @@ import kotlinx.android.synthetic.main.activity_delete_notifications.view.*
 
 private const val DAY = 1000 * 60 * 60 * 24
 
-class DeleteNotificationsFragment: Fragment() {
+class DeleteNotificationsFragment: Fragment(R.layout.activity_delete_notifications) {
 
     private lateinit var db: NcDatabase
 
     private val deleteNotificationsManager = DeleteNotificationsManager()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreate(savedInstanceState)
-        val root = inflater.inflate(R.layout.activity_delete_notifications, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         db = NcDatabase.create(this.requireContext())
 
-        root.delete_all_notifications_btn.setOnClickListener { view -> onDeleteAllNotifications(view) }
-        root.delete_old_notifications_btn.setOnClickListener { view -> onDeleteOldNotifications(view) }
-
-        return root
+        view.delete_all_notifications_btn.setOnClickListener { view1 -> onDeleteAllNotifications(view1) }
+        view.delete_old_notifications_btn.setOnClickListener { view1 -> onDeleteOldNotifications(view1) }
     }
 
     private fun onDeleteAllNotifications(view: View) {

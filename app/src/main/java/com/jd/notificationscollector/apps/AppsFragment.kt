@@ -1,9 +1,7 @@
 package com.jd.notificationscollector.apps
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +14,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.Collator
 
-class AppsFragment: Fragment() {
+class AppsFragment: Fragment(R.layout.activity_apps_settings) {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -26,44 +24,36 @@ class AppsFragment: Fragment() {
 
     private var dataset: MutableList<AppInfo> = mutableListOf()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreate(savedInstanceState)
-        val root = inflater.inflate(R.layout.activity_apps_settings, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         db = NcDatabase.create(requireContext())
 
-        root.apps_swipe_container.setOnRefreshListener {
+        view.apps_swipe_container.setOnRefreshListener {
             loadApps()
         }
 
         viewManager = LinearLayoutManager(requireContext())
         viewAdapter = AppsSettingsRecyclerAdapter(dataset, requireContext())
 
-        recyclerView = root.findViewById<RecyclerView>(R.id.apps_recycler).apply {
+        recyclerView = view.findViewById<RecyclerView>(R.id.apps_recycler).apply {
             this.setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
 
-        return root
-    }
-
-    override fun onStart() {
-        super.onStart()
         loadApps()
     }
 
     private fun loadApps() {
-        val view = requireView()
-
-        view.apps_swipe_container.isRefreshing = true
+        view?.apps_swipe_container?.isRefreshing = true
         GlobalScope.launch {
             dataset.clear()
             dataset.addAll(sortApps(db.appsInfoDao().findAll()))
 
             requireActivity().runOnUiThread {
                 viewAdapter.notifyDataSetChanged()
-                view.apps_swipe_container.isRefreshing = false
+                view?.apps_swipe_container?.isRefreshing = false
             }
         }
     }
