@@ -16,10 +16,9 @@ class NotificationLogsActivity : AppCompatActivity() {
     private val onNotificationLogClick = View.OnClickListener {
         it as TextView
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboardManager.primaryClip = ClipData.newPlainText("src", it.text)
+        clipboardManager.setPrimaryClip(ClipData.newPlainText("src", it.text))
 
-        Toast.makeText(this,
-            R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
