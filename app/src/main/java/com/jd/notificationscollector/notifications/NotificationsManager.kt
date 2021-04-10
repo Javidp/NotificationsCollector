@@ -1,4 +1,4 @@
-package com.jd.notificationscollector
+package com.jd.notificationscollector.notifications
 
 import android.content.Context
 import androidx.core.os.ConfigurationCompat
@@ -15,7 +15,7 @@ class NotificationsManager(private val context: Context, private val db: NcDatab
         reloadFilterItems()
     }
 
-    fun getNotifications(count: Int): List<Notification> {
+    suspend fun getNotifications(count: Int): List<Notification> {
         reloadFilterItems()
         val selectedApps = filterItems.filter { it.checked }
         return if (selectedApps.isEmpty()) {
@@ -39,8 +39,10 @@ class NotificationsManager(private val context: Context, private val db: NcDatab
 
     private fun reloadFilterItems() {
         filterItems = sortApps(db.appsInfoDao().findAll()).map {
-            FilterItem(it.packageName, it.appName ?: "", filterItems.find { filterItem ->
-                filterItem.packageName == it.packageName }?.checked ?: false
+            FilterItem(
+                it.packageName, it.appName ?: "", filterItems.find { filterItem ->
+                    filterItem.packageName == it.packageName
+                }?.checked ?: false
             )
         }
     }
@@ -48,7 +50,7 @@ class NotificationsManager(private val context: Context, private val db: NcDatab
     private fun sortApps(apps: List<AppInfo>): List<AppInfo> {
         val locale = ConfigurationCompat.getLocales(context.resources.configuration)[0]
         val collator = Collator.getInstance(locale).apply { strength = Collator.PRIMARY }
-        return apps.sortedWith(Comparator { app1, app2 -> collator.compare(app1.appName, app2.appName) })
+        return apps.sortedWith { app1, app2 -> collator.compare(app1.appName, app2.appName) }
     }
 
 }

@@ -2,9 +2,15 @@ package com.jd.notificationscollector.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "notifications")
+@Entity(tableName = "notifications",
+    indices = [
+        Index(value = ["timestamp"]),
+        Index(value = ["packageName", "timestamp"])
+    ]
+)
 data class Notification(
     @PrimaryKey
     @ColumnInfo(name = "_id")

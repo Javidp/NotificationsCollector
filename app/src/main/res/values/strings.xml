@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Notifications Collector</string>
 
+    <!-- Side menu -->
+    <string name="open_drawer_content_desc">open</string>
+    <string name="close_drawer_content_desc">close</string>
+
     <!-- Menu -->
     <string name="menu_item_filter">Filter</string>
     <string name="menu_item_clear">Clear</string>
@@ -12,6 +16,7 @@
     <string name="confirm_positive">Yes</string>
     <string name="confirm_negative">No</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
     <string name="no_data">No data</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="filter">Filter</string>
@@ -29,6 +34,30 @@
     <string name="app_settings_enable_collecting_description">Enable if you want to collect notifications from this app</string>
     <string name="app_settings_number_of_notifications_description">Collected %d notifications in total</string>
 
+    <!--  Delete notifications  -->
+    <string name="delete_notifications_description">Here you can delete notifications. You can delete all of them or just the old ones.</string>
+    <string name="delete_all_notifications_title">Delete all notifications</string>
+    <string name="delete_all_notifications_btn">Delete all</string>
+    <string name="delete_all_notifications_alert_title">Delete all notifications</string>
+    <string name="delete_all_notifications_alert_description">Are you sure you want to delete all notifications (up to this moment)? This action can not be undone.</string>
+
+    <string name="delete_notifications_counting_title">Preparing data</string>
+    <string name="delete_notifications_counting_description">The app is preparing and counting data. Please wait a moment.\n\nDepending on number of notifications it may take a few seconds or a few minutes.</string>
+    <string name="delete_notifications_nothing_to_delete_title">Nothing to delete</string>
+    <string name="delete_notifications_nothing_to_delete_description">There are no notifications matching selected criteria</string>
+    <string name="delete_old_notifications_alert_title">Delete selected notifications</string>
+    <string name="delete_old_notifications_alert_message">This action will delete %1$d notifications. Are you sure you want to continue? This action can not be undone.</string>
+    <string name="delete_old_notifications_btn">Delete selected</string>
+    <string name="delete_old_notifications_title">Delete old notifications</string>
+    <string name="delete_old_notifications_time_label">days</string>
+    <string name="delete_old_notifications_description">Delete notifications older than</string>
+    <string name="delete_old_notifications_default_value">30</string>
+
+    <string name="delete_notifications_in_progress_notification_title">Deleting notifications!</string>
+    <string name="delete_notifications_in_progress_notification_description">Deleting in progress...</string>
+    <string name="delete_notifications_completed_notification_title">Deleting notifications completed!</string>
+    <string name="delete_notifications_completed_notification_description">Successfully deleted %1$d notifications</string>
+
     <!-- Permissions -->
     <string name="permission_request_title">Permission required</string>
     <string name="permission_request_open_settings">Open settings</string>
@@ -37,4 +66,15 @@
     <!-- Filter -->
     <string name="filter_view_title">Select apps</string>
     <string name="filter_show_all">Show all</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_notifications">Notifications</string>
+    <string name="menu_apps">Apps</string>
+    <string name="menu_delete_notifications">Delete notifications</string>
 </resources>

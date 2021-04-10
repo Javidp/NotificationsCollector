@@ -1,11 +1,13 @@
 package com.jd.notificationscollector.apps
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.jd.notificationscollector.BitmapDrawableConverter
 import com.jd.notificationscollector.R
 import com.jd.notificationscollector.database.NcDatabase
+import com.jd.notificationscollector.delete.DeleteNotificationsManager
+import com.jd.notificationscollector.delete.DeleteNotificationsService
 import com.jd.notificationscollector.model.AppInfo
 import kotlinx.android.synthetic.main.activity_app_settings.*
 import kotlinx.android.synthetic.main.content_app_settings.*
@@ -16,6 +18,8 @@ class AppSettings : AppCompatActivity() {
 
     private lateinit var db: NcDatabase
     private var app: AppInfo? = null
+
+    private val deleteNotificationsManager = DeleteNotificationsManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +35,10 @@ class AppSettings : AppCompatActivity() {
         setupAppInfo()
         setupEnableCollecting()
         setupCollectedNotificationsInfo()
+
+        app_settings_btn_delete_notifications.setOnClickListener {
+            onDeleteNotifications()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -73,28 +81,25 @@ class AppSettings : AppCompatActivity() {
                 }
             }
         }
-
-        app_settings_btn_delete_notifications.setOnClickListener {
-            showDeleteNotificationsDialog()
-        }
     }
 
-    private fun showDeleteNotificationsDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.clear_confirm_title)
-            .setMessage(R.string.clear_confirm_message)
-            .setPositiveButton(R.string.confirm_positive) { _, _ ->
-                deleteNotifications()
-                setupCollectedNotificationsInfo()
-            }
-            .setNegativeButton(R.string.confirm_negative, null)
-            .show()
+    private fun onDeleteNotifications() {
+        app?.packageName?.let { packageName ->
+            deleteNotificationsManager.showDeleteNotificationsPopups(
+                this,
+                { db.notificationsDao().countByPackageName(packageName).toLong() },
+                { startDeleteNotificationsService(packageName) },
+                {})
+        }
+
     }
 
-    private fun deleteNotifications() {
-        app?.packageName?.let {
-            db.notificationsDao().deleteByPackageName(it)
-        }
+    private fun startDeleteNotificationsService(packageName: String) {
+        val intent = Intent(this, DeleteNotificationsService::class.java)
+        intent.action = "ACTION_START_FOREGROUND_SERVICE"
+        intent.putExtra("mode", DeleteNotificationsService.Mode.APP)
+        intent.putExtra("app_package", packageName);
+        this.startService(intent)
     }
 
 }

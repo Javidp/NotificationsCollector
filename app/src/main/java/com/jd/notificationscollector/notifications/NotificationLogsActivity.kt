@@ -1,4 +1,4 @@
-package com.jd.notificationscollector
+package com.jd.notificationscollector.notifications
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.jd.notificationscollector.R
 import com.jd.notificationscollector.database.NcDatabase
 
 class NotificationLogsActivity : AppCompatActivity() {
@@ -17,7 +18,8 @@ class NotificationLogsActivity : AppCompatActivity() {
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboardManager.primaryClip = ClipData.newPlainText("src", it.text)
 
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,
+            R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

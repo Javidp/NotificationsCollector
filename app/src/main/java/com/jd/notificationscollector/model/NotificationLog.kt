@@ -1,15 +1,25 @@
 package com.jd.notificationscollector.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 
-@Entity(tableName = "notifications_logs")
+@Entity(tableName = "notifications_logs",
+    indices = [
+        Index(value = ["notificationId"])
+    ],
+    foreignKeys = [
+        ForeignKey(
+            entity = Notification::class,
+            parentColumns = ["_id"],
+            childColumns = ["notificationId"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class NotificationLog (
     @PrimaryKey
     @ColumnInfo(name = "_id")
     var id: Long?,
-    @ColumnInfo(name = "notification_id")
     var notificationId: Long?,
     @ColumnInfo(name = "statusBarNotification")
     var sbn: String?,
