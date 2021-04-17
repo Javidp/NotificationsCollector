@@ -1,5 +1,6 @@
 package com.jd.notificationscollector
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -58,6 +59,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         loadFragment(NotificationsFragment::class.java)
         toolbar.title = getString(R.string.menu_notifications)
         navView.setCheckedItem(R.id.nav_notifications)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        for (fragment in supportFragmentManager.fragments) {
+            fragment?.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     private fun onNavigationItemSelect(menuItem: MenuItem): Boolean {

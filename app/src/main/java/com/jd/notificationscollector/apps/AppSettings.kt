@@ -1,7 +1,9 @@
 package com.jd.notificationscollector.apps
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.jd.notificationscollector.BitmapDrawableConverter
 import com.jd.notificationscollector.R
@@ -28,8 +30,16 @@ class AppSettings : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val appPackage = intent.getStringExtra("app_package_name")
+        if (appPackage == null) {
+            onAppNotFound()
+            return
+        }
         db = NcDatabase.create(this)
         app = db.appsInfoDao().findByPackageName(appPackage)
+        if (app == null) {
+            onAppNotFound()
+            return
+        }
 
         initDefaultValues()
         setupAppInfo()
@@ -39,11 +49,21 @@ class AppSettings : AppCompatActivity() {
         app_settings_btn_delete_notifications.setOnClickListener {
             onDeleteNotifications()
         }
+
+        delete_app_btn.setOnClickListener {
+            onDeleteApp()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun onAppNotFound() {
+        Toast.makeText(this, R.string.app_settings_app_not_found, Toast.LENGTH_SHORT).show()
+        setResult(0)
+        finish()
     }
 
     private fun initDefaultValues() {
@@ -100,6 +120,29 @@ class AppSettings : AppCompatActivity() {
         intent.putExtra("mode", DeleteNotificationsService.Mode.APP)
         intent.putExtra("app_package", packageName);
         this.startService(intent)
+    }
+
+    private fun onDeleteApp() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.app_settings_delete_app_alert_title)
+            .setMessage(R.string.app_settings_delete_app_alert_description)
+            .setPositiveButton(R.string.confirm_positive) { _, _ ->
+                GlobalScope.launch {
+                    app?.let {
+                        val appName = it.appName
+                        db.appsInfoDao().delete(it)
+
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, getString(R.string.app_delete_confirm_message, appName), Toast.LENGTH_SHORT).show()
+                            setResult(1)
+                            finish()
+                        }
+                    }
+                }
+            }
+            .setNegativeButton(R.string.confirm_negative) { _, _ -> }
+            .create()
+            .show()
     }
 
 }

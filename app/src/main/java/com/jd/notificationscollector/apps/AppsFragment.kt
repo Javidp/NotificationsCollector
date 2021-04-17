@@ -1,5 +1,6 @@
 package com.jd.notificationscollector.apps
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.ConfigurationCompat
@@ -43,6 +44,15 @@ class AppsFragment: Fragment(R.layout.activity_apps_settings) {
         }
 
         loadApps()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode !in 200..299) return
+
+        when(resultCode) {
+            1 -> loadApps()
+        }
     }
 
     private fun loadApps() {

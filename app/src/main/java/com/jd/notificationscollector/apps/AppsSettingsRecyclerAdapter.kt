@@ -1,5 +1,6 @@
 package com.jd.notificationscollector.apps
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.jd.notificationscollector.BitmapDrawableConverter
 import com.jd.notificationscollector.R
@@ -40,7 +42,12 @@ class AppsSettingsRecyclerAdapter(private val apps: List<AppInfo>,
         holder.appItemView.setOnClickListener {
             val appSettingsIntent = Intent(context, AppSettings::class.java)
             appSettingsIntent.putExtra("app_package_name", apps[position].packageName)
-            context.startActivity(appSettingsIntent)
+
+            when (context) {
+                is Activity -> context.startActivityForResult(appSettingsIntent, 200)
+                is Fragment -> context.startActivityForResult(appSettingsIntent, 200)
+                else -> context.startActivity(appSettingsIntent)
+            }
         }
     }
 
