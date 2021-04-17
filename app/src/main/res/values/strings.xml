@@ -34,6 +34,14 @@
     <string name="app_settings_enable_collecting_description">Enable if you want to collect notifications from this app</string>
     <string name="app_settings_number_of_notifications_description">Collected %d notifications in total</string>
 
+    <string name="app_settings_delete_app_title">Delete the app</string>
+    <string name="app_settings_delete_app_description">Delete application and it\'s settings</string>
+    <string name="app_settings_delete_app_alert_title">Delete application</string>
+    <string name="app_settings_delete_app_alert_description">This will delete the app and it\'s settings.\n\nThis will not delete app\'s notifications.\nYou will not be able to delete notifications from this app later, so please do it before you delete the app.</string>
+    <string name="app_delete_confirm_message">Deleted %1$s</string>
+
+    <string name="app_settings_app_not_found">App not found</string>
+
     <!--  Delete notifications  -->
     <string name="delete_notifications_description">Here you can delete notifications. You can delete all of them or just the old ones.</string>
     <string name="delete_all_notifications_title">Delete all notifications</string>

@@ -1,9 +1,6 @@
 package com.jd.notificationscollector.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.jd.notificationscollector.model.AppInfo
 
 @Dao
@@ -23,5 +20,8 @@ interface AppsInfoDao: BaseDao<AppInfo> {
 
     @Query("DELETE FROM apps_info")
     fun clearAll()
+
+    @Delete
+    fun delete(appInfo: AppInfo): Int
 
 }
